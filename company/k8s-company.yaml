@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment #kubernets resource kind we are creating
+metadata:
+  name: company
+spec:
+  selector:
+    matchLabels:
+      app: company
+  replicas: 1 #Number of replicas that will create for this deployment
+  template:
+    metadata:
+      labels:
+        app: company
+    spec:
+      containers:
+        - name: company
+          image: shashi28aug/company-eureka #Image that will be used to be container in cluster
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8021 #The port that container is running on in the cluster
+
+---
+
+apiVersion: v1 # Kubernetes API version
+kind: Service # Kubernetes resource kind we are creating
+metadata: # Metadata of the resource kind we are creating
+  name: company
+spec:
+  selector:
+    app: company
+  ports:
+    - protocol: "TCP"
+      port: 8021 # The port that the service is running on in the cluster
+      targetPort: 8021 # The port exposed by the service
+  type: NodePort # type of the service.
